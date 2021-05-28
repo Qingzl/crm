@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javalearning.workbench.activity.dao.ActivityDao">
+    <insert id="add">
+        insert into tbl_activity(id,owner,name,startDate,endDate,cost,description,createTime,createBy
+) values(#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})
+    </insert>
+
+    <select id="getByCondition" resultType="com.javalearning.workbench.activity.domain.Activity">
+        select a.id,a.name,u.name owner,a.startDate,a.endDate from tbl_activity a join tbl_user u on a.owner=u.id
+        <where>
+            <if test="s_name_p != null and s_name_p != ''">
+                a.name like '%' #{s_name_p} '%'
+            </if>
+            <if test="s_owner_p != null and s_owner_p != ''">
+                and u.name like '%' #{s_owner_p} '%'
+            </if>
+            <if test="s_startDate_p != null and s_startDate_p != ''">
+                and a.startDate &gt;= #{s_startDate_p}
+            </if>
+            <if test="s_endDate_p != null and s_endDate_p != ''">
+                and a.endDate &lt;= #{s_endDate_p}
+            </if>
+        </where>
+        order by a.createTime desc
+    </select>
+
+    <delete id="delete">
+        delete from tbl_activity where id in(
+        <foreach collection="array" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <select id="getById" resultType="com.javalearning.workbench.activity.domain.Activity">
+        select * from tbl_activity where id=#{id_p}
+    </select>
+
+    <update id="update">
+        update tbl_activity set owner=#{owner},name=#{name},startDate=#{startDate},endDate=#{endDate},cost=#{cost},description=#{description},editTime=#{editTime},editBy=#{editBy}
+        where id=#{id}
+    </update>
+
+    <select id="getByClueId" resultType="com.javalearning.workbench.activity.domain.Activity">
+        select a.id,a.name,a.startDate,a.endDate,u.name owner from tbl_activity a
+        join tbl_user u on a.owner=u.id
+        join tbl_clue_activity_relation car on a.id=car.activityId
+        where car.clueId=#{cid}
+        order by a.startDate asc
+    </select>
+
+    <select id="getNotBind" resultType="com.javalearning.workbench.activity.domain.Activity">
+        select a.id,a.name,a.startDate,a.endDate,u.name owner from tbl_activity a
+        join tbl_user u on a.owner=u.id
+        where a.id not in (
+        <foreach collection="ids" separator="," item="id">
+            #{id}
+        </foreach>)
+        <if test="name_p != '' and name_p != null">
+            and a.name like '%' #{name_p} '%'
+        </if>
+    </select>
+</mapper>

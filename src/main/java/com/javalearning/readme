@@ -1,0 +1,9 @@
+http://localhost:8080/crm/workbench/index.html
+zhangsan
+
+
+onclick="
+window.location='
+activity/detail?aid=819d1e36f0e04f1eaf13b0eb68634ce9&owner=张三
+';
+"

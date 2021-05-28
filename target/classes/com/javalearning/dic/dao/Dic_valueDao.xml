@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javalearning.dic.dao.Dic_valueDao">
+    <select id="queryByTypecode" resultType="com.javalearning.dic.domain.Dic_value">
+        select * from tbl_dic_value where typeCode=#{tc} order by orderNo+0 asc
+    </select>
+</mapper>
